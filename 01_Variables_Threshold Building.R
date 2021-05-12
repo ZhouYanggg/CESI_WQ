@@ -22,7 +22,7 @@ source('01_Variables_File download&Path setup.R')
 source('01_Variables_BdayCalculation.R')
 
 ###########   Calculate Threshold    ###########
-stations <- read.csv("./Dependencies/RHBN_U.csv", header = TRUE)
+stations <- read.csv("../Dependencies/RHBN_U.csv", header = TRUE)
 list <-as.character(stations$STATION_NUMBER)
 Upper = c()
 Lower = c()
@@ -64,4 +64,4 @@ for (i in 1:length(list)){
   }
 }
 Threshold = data.frame(STATION_NUMBER = list, Q95=Upper, Q5=Lower)
-write.csv(Threshold, file = "./Dependencies/Threshold_New.csv", row.names = FALSE)
+write.csv(Threshold, file = "../Dependencies/Threshold_New.csv", row.names = FALSE)

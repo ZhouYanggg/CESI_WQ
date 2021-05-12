@@ -16,7 +16,7 @@ library(tidyhydat)     # HYDAT access
 # the databse will be set to the existing file.
 # Keeping a file folder with old Hydat versions to be able to reproduce old work is highly suggested
 # ***Make sure Dependencies folder exists. ***
-hy_file <- "./Dependencies/Hydat"
+hy_file <- "../Dependencies/Hydat"
 if( length( grep("Hydat", list.files(hy_file)))==0){
   
   # hydat file will be downloaded in dependencies and subsequent tidyhydat calls will use this file
@@ -29,5 +29,5 @@ if( length( grep("Hydat", list.files(hy_file)))==0){
   hy_set_default_db(hydat_path = hy_db)
 }
 
-area_file <- "./Dependencies/RHBN_NandU_watershedareas.csv"
+area_file <- "../Dependencies/RHBN_NandU_watershedareas.csv"
 area <- read.table(area_file, sep=',', header=T)

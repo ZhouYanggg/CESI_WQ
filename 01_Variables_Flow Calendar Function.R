@@ -38,8 +38,8 @@ library(zoo)       # For working with time series
 library(evir)      # For POT
 library(purrr)     # function 'possibly' is easiest way to deal with errors
 library(lfstat)    # package for low flow statistics
-source('01_Variables_Threshold Building.R')        # Sourcing from the threshold calculation file
 source('01_Variables_File download&Path setup.R')  # Sourcing from file downloads
+source('01_Variables_Threshold Building.R')        # Sourcing from the threshold calculation file
 source('01_Variables_BdayCalculation.R')           # Sourcing from bday_calculation function
 
 ###########  Function:Flow_Calendar  ###########
@@ -358,7 +358,7 @@ flow_calendar <- function(id, year){
 
 
 #### Obtain flow data and calculate hydrological variables ####
-stations <- read.csv("./Dependencies/RHBN_U.csv", header = TRUE)
+stations <- read.csv("../Dependencies/RHBN_U.csv", header = TRUE)
 list <-as.character(stations$STATION_NUMBER)
 # select station from list, analyse, write to csv.
 for (i in 1:length(list)){
@@ -371,31 +371,34 @@ for (i in 1:length(list)){
   flow.daily$Year <- as.numeric(format(flow.daily$Date, "%Y"))
   flow.daily$Month<- as.numeric(format(flow.daily$Date, "%m"))  # Change as necessary
   Years <- unique(flow.daily$Year) # All years with any data
-  output1 <- paste("./Variables/", stn.id, ".csv", sep= "")
+  output1 <- paste("../Variables/", stn.id, ".csv", sep= "")
+  fileupdate <- FALSE
   if (file.exists(output1)){
     # file.remove(output1) 
     # use this when making changes to past csvs
+    fileupdate <- TRUE
     current_dat = read.csv(output1, header=TRUE)
-    Years = Years[length(current_dat$year) -1 :length(Years)]
+    Years = Years[(length(current_dat$year)) :(length(Years))]
     current_dat = current_dat[-(nrow(current_dat)), ] #should remove the last row of data
-    write.csv(current_dat, output1)
+    write.csv(current_dat, output1, row.names=FALSE)
   }
   Year_list=length(Years)
   for (i in 1:Year_list){
     flow.dates = flow.daily %>% filter(Year == Years[i])
     flow_calendar(stn.id,Years[i])
   }
-  
-  # Add a header to the spreadsheet
+}
+
+# Add a header to the spreadsheet
+if (!fileupdate){
   header1 <- read.csv(output1, header = FALSE)
+  print("New file; add header")
   colnames(header1) <- c("station", "year", "ann_mean_flow", "pot_threshold",
                          "pot_days", "pot_events",  "pot_max_dur",
                          "1_day_max", "dr_threshold", "dr_days", "dr_events", "dut_max_dur",
                          "7_day_min")
   write.csv(header1, file = output1, row.names = FALSE)
-  
 }
-
 
 # Zhou's comments on this section
 # 1. The variable name is pot.exceed.mean, the output's name is pot_mean_exceedance(removed for now)
