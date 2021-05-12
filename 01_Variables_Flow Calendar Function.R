@@ -393,7 +393,7 @@ for (i in 1:length(list)){
 if (!fileupdate){
   header1 <- read.csv(output1, header = FALSE)
   print("New file; add header")
-  colnames(header1) <- c("station", "year", "ann_mean_flow", "pot_threshold",
+  colnames(header1) <- c("station", "year", "ann_mean_yield", "pot_threshold",
                          "pot_days", "pot_events",  "pot_max_dur",
                          "1_day_max", "dr_threshold", "dr_days", "dr_events", "dut_max_dur",
                          "7_day_min")
