@@ -26,15 +26,15 @@ percentile.ranked <- function(a.vector, value) {
 
 ##### Creating Summary tables for Metrics  #####
 # for each station, extract the metric in question, then alter by watershed area if needed
-if (file.exists(paste0("./Variables/Summary.",ref,".csv"))){
-  results.all <- read.csv(paste0("./Variables/Summary.", ref, ".csv"), header = TRUE)
+if (file.exists(paste0("../Variables/Summary.",ref,".csv"))){
+  results.all <- read.csv(paste0("../Variables/Summary.", ref, ".csv"), header = TRUE)
 } else {
   snap <- list()
   for (k in 1:length(stn.list.full)){
     stn <- stn.list.full[k]
     print(stn)
     # load data
-    data <- read.csv(paste0("./Variables/", stn, ".csv"), header = TRUE)
+    data <- read.csv(paste0("../Variables/", stn, ".csv"), header = TRUE)
     data$station <- as.character(data$station)
     # extract variable of interest
     q <- data.frame(matrix(ncol=7, nrow=length(list.var), 
@@ -47,9 +47,9 @@ if (file.exists(paste0("./Variables/Summary.",ref,".csv"))){
       var.t <- list.var[i]
       # if variable needs it, scale variable by watershed size. Units will now be in mm/time,
       # where time is either one year, 7 days, or one day.
-      if (var.t %in% c("ann_mean_flow", "X7_day_min", "X1_day_max")){
+      if (var.t %in% c("ann_mean_yield", "X7_day_min", "X1_day_max")){
         watershed <- stations[stations$STATION_NUMBER == stn, "Shp_Area"]
-        time <- case_when(var.t ==  "ann_mean_flow"  ~ 365*24*3600,
+        time <- case_when(var.t ==  "ann_mean_yield"  ~ 365*24*3600,
                           var.t ==  "X7_day_min"       ~ 7*24*3600,
                           var.t ==  "X1_day_max"       ~ 1*24*3600)
 
@@ -137,16 +137,16 @@ if (file.exists(paste0("./Variables/Summary.",ref,".csv"))){
                                    results.all$Z  > -0.52 & results.all$Z  <  0.52 ~ "Uncertain",
                                    results.all$Z >=  0.52 & results.all$Z  <  1.28 ~ "Likely Upward",
                                    results.all$Z >=  1.28 ~ "Confident Upward")
-  write.csv(results.all, paste0("./Variables/Summary.", ref, ".csv"), row.names = FALSE)
+  write.csv(results.all, paste0("../Variables/Summary.", ref, ".csv"), row.names = FALSE)
 }
 
-if (file.exists(paste0("./Variables/Summary.Variables.", ref, ".csv"))){
-  Summary.v <- read.csv(paste0("./Variables/Summary.Variables.", ref, ".csv"), header = TRUE)
+if (file.exists(paste0("../Variables/Summary.Variables.", ref, ".csv"))){
+  Summary.v <- read.csv(paste0("../Variables/Summary.Variables.", ref, ".csv"), header = TRUE)
 } else {
   Summary.v <- results.all %>% group_by(variable) %>% summarise(Low = sum(CAT2016 == "Low", na.rm=TRUE), 
                                                                Normal = sum(CAT2016 == "Normal", na.rm = TRUE),
                                                                High = sum(CAT2016 == "High", na.rm = TRUE))
-  write.csv(Summary.v, paste0("./Variables/Summary.Variables.", ref, ".csv"), row.names = FALSE)
+  write.csv(Summary.v, paste0("../Variables/Summary.Variables.", ref, ".csv"), row.names = FALSE)
 }
 
 
@@ -156,7 +156,7 @@ for (k in 1:length(stn.list.full)){
   stn <- stn.list.full[k]
   # print(stn)
   # load data
-  data <- read.csv(paste0("./Variables/", stn, ".csv"), header = TRUE)
+  data <- read.csv(paste0("../Variables/", stn, ".csv"), header = TRUE)
   data$station <- as.character(data$station)
   
   # extract variable of interest
@@ -169,9 +169,9 @@ for (k in 1:length(stn.list.full)){
   for (i in 1:length(list.var.name)) {
     # if variable needs it, scale variable by watershed size. Units will now be in mm/time,
     # where time is either one year, 7 days, or one day.
-    if (var.t %in% c("ann_mean_flow", "X7_day_min", "X1_day_max")){
+    if (var.t %in% c("ann_mean_yield", "X7_day_min", "X1_day_max")){
       watershed <- stations[stations$STATION_NUMBER == stn, "Shp_Area"]
-      time <- case_when(var.t ==  "ann_mean_flow"  ~ 365*24*3600,
+      time <- case_when(var.t ==  "ann_mean_yield"  ~ 365*24*3600,
                         var.t ==  "X7_day_min"       ~ 7*24*3600,
                         var.t ==  "X1_day_max"       ~ 1*24*3600)
       data[[var.t]] <- data[[var.t]]*time/(watershed*10^3)
@@ -203,7 +203,7 @@ trend.v <- Ind.trends %>% group_by(variable) %>%
   summarise(Sig.pos = sum(Z>=0.84, na.rm=TRUE), 
             None = n() - sum(Z>=0.84, na.rm=TRUE) - sum(Z<=-0.84, na.rm = TRUE),
             Sig.neg = sum(Z<=-0.84, na.rm = TRUE))
-write.csv(trend.v, paste0("./Variables/Summary.Variables.trends_", aggmethod, ".csv"), row.names = FALSE)
+write.csv(trend.v, paste0("../Variables/Summary.Variables.trends_", aggmethod, ".csv"), row.names = FALSE)
 
 # Remove redundant variables to save memory space
 remove(snap,stn,data,q,var.name,var.t,watershed,time,data.ref,q.var,median,goodyears,gap.check,latest, 
