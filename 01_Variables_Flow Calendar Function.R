@@ -4,7 +4,7 @@
 # This section of the script focus on outputing the variables of desire.
 # Specifically, the metrics calulated within this portion consists of:
 #   1) Annual Mean flows. Annual requires continous year or that the mean of all annual modes is
-#      under 0.01 cubic meters/s (then unrecorded dates are considered negligible)(ann_mean_flow);
+#      under 0.01 cubic meters/s (then unrecorded dates are considered negligible)(ann_mean_yield);
 #   2) Max flow of a station over a desired year(max.flow); 
 #   3) Taking the 7-day rolling average, then identifying the minimum value within the bdays
 #      (non-ice conditions) (min7summ);
@@ -69,19 +69,19 @@ flow_calendar <- function(id, year){
     cat(paste(id, year, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, sep=","), 
         file = output1, append = T, fill = T)
   }else{  
-    if (nrow(flow.dates%>%filter(!is.na(Value)))>0.9 *ifelse(flow.dates$Year[1]%%4==0, 366, 365)){
-    ann_mean_flow <- flow.dates %>% mutate(mean_flow = mean(Value, na.rm = TRUE))
-    ann_mean_flow <- ann_mean_flow[1, "mean_flow"] %>% round(2)
+    if (nrow(flow.dates%>%filter(!is.na(Value))) > 0.9 * ifelse(flow.dates$Year[1]%%4==0, 366, 365)){
+    ann_mean_yield <- flow.dates %>% mutate(mean_flow = mean(Value, na.rm = TRUE))
+    ann_mean_yield <- ann_mean_yield[1, "mean_flow"] %>% round(2)
   } else {
     Mode <- flow.daily  %>% group_by(Year) %>% filter(!is.na(Value)) %>%
       summarise(MODE=names(sort(table(Value), decreasing = TRUE)[1]))
     Mode.multi <- mean(as.numeric(Mode$MODE))
     if (Mode.multi <0.01){
-      ann_mean_flow <- flow.dates %>% filter(!is.na(Value)) %>% group_by(Year) %>% 
+      ann_mean_yield <- flow.dates %>% filter(!is.na(Value)) %>% group_by(Year) %>% 
         summarise(TOTAL=sum(Value)/n())
-      ann_mean_flow <- round(ann_mean_flow$TOTAL,2)
+      ann_mean_yield <- round(ann_mean_yield$TOTAL,2)
     } else {
-      ann_mean_flow <- NA
+      ann_mean_yield <- NA
     }
   }
     
@@ -109,7 +109,7 @@ flow_calendar <- function(id, year){
     #  Including pot_threshold, pot_events, pot_days, pot_max_dur
     station_row <- Threshold %>% filter(STATION_NUMBER==id)
     if (is.na(station_row$Q95)){
-      cat(paste(id, year, ann_mean_flow, NA, NA, NA, NA, max.flow, NA, NA, NA, NA, min7summ, sep=","), 
+      cat(paste(id, year, ann_mean_yield, NA, NA, NA, NA, max.flow, NA, NA, NA, NA, min7summ, sep=","), 
           file = output1, append = T, fill = T)
     }else{
       threshold <- as.numeric(station_row$Q95)
@@ -348,7 +348,7 @@ flow_calendar <- function(id, year){
         
       }
       dr_threshold <- low
-      cat(paste(id, year, ann_mean_flow, pot_threshold, pot_days, 
+      cat(paste(id, year, ann_mean_yield, pot_threshold, pot_days, 
                 pot_events, pot_max_dur, max.flow, dr_threshold, dr_days,
                 dr_events, dut_max_dur, min7summ, sep=","), 
           file = output1, append = T, fill = T)
