@@ -358,7 +358,7 @@ flow_calendar <- function(id, year){
 
 
 #### Obtain flow data and calculate hydrological variables ####
-stations <- read.csv("../Dependencies/RHBN_U.csv", header = TRUE)
+stations <- read.csv("./Dependencies/RHBN_U.csv", header = TRUE)
 list <-as.character(stations$STATION_NUMBER)
 # select station from list, analyse, write to csv.
 for (i in 1:length(list)){
@@ -371,7 +371,7 @@ for (i in 1:length(list)){
   flow.daily$Year <- as.numeric(format(flow.daily$Date, "%Y"))
   flow.daily$Month<- as.numeric(format(flow.daily$Date, "%m"))  # Change as necessary
   Years <- unique(flow.daily$Year) # All years with any data
-  output1 <- paste("../Variables/", stn.id, ".csv", sep= "")
+  output1 <- paste("./Variables/", stn.id, ".csv", sep= "")
   fileupdate <- FALSE
   if (file.exists(output1)){
     # file.remove(output1) 
