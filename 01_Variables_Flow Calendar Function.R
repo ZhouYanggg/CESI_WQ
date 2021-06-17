@@ -358,9 +358,9 @@ flow_calendar <- function(id, year){
 
 
 #### Obtain flow data and calculate hydrological variables ####
-stations <- read.csv("../Dependencies/RHBN_U.csv", header = TRUE)
+stations <- read.csv("./Dependencies/RHBN_U.csv", header = TRUE)
 list <-as.character(stations$STATION_NUMBER)
-# select station from list, analyse, write to csv.
+# select station from list, analyze, write to csv.
 for (i in 1:length(list)){
   stn.id <- list[i]
   # 1) R > 5+log(A/1.609^2);
@@ -371,7 +371,7 @@ for (i in 1:length(list)){
   flow.daily$Year <- as.numeric(format(flow.daily$Date, "%Y"))
   flow.daily$Month<- as.numeric(format(flow.daily$Date, "%m"))  # Change as necessary
   Years <- unique(flow.daily$Year) # All years with any data
-  output1 <- paste("../Variables/", stn.id, ".csv", sep= "")
+  output1 <- paste("./Variables/", stn.id, ".csv", sep= "")
   fileupdate <- FALSE
   if (file.exists(output1)){
     # file.remove(output1) 
@@ -387,7 +387,7 @@ for (i in 1:length(list)){
     flow.dates = flow.daily %>% filter(Year == Years[i])
     flow_calendar(stn.id,Years[i])
   }
-}
+
 
 # Add a header to the spreadsheet
 if (!fileupdate){
@@ -399,7 +399,7 @@ if (!fileupdate){
                          "7_day_min")
   write.csv(header1, file = output1, row.names = FALSE)
 }
-
+}
 # Zhou's comments on this section
 # 1. The variable name is pot.exceed.mean, the output's name is pot_mean_exceedance(removed for now)
 # 2. Moved zooflow from the annual mean flow section-better to define it afterwards?

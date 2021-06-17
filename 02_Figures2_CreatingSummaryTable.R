@@ -26,15 +26,15 @@ percentile.ranked <- function(a.vector, value) {
 
 ##### Creating Summary tables for Metrics  #####
 # for each station, extract the metric in question, then alter by watershed area if needed
-if (file.exists(paste0("../Variables/Summary.",ref,".csv"))){
-  results.all <- read.csv(paste0("../Variables/Summary.", ref, ".csv"), header = TRUE)
+if (file.exists(paste0("./Variables/Summary.",ref,".csv"))){
+  results.all <- read.csv(paste0("./Variables/Summary.", ref, ".csv"), header = TRUE)
 } else {
   snap <- list()
   for (k in 1:length(stn.list.full)){
     stn <- stn.list.full[k]
     print(stn)
     # load data
-    data <- read.csv(paste0("../Variables/", stn, ".csv"), header = TRUE)
+    data <- read.csv(paste0("./Variables/", stn, ".csv"), header = TRUE)
     data$station <- as.character(data$station)
     # extract variable of interest
     q <- data.frame(matrix(ncol=7, nrow=length(list.var), 
@@ -137,16 +137,16 @@ if (file.exists(paste0("../Variables/Summary.",ref,".csv"))){
                                    results.all$Z  > -0.52 & results.all$Z  <  0.52 ~ "Uncertain",
                                    results.all$Z >=  0.52 & results.all$Z  <  1.28 ~ "Likely Upward",
                                    results.all$Z >=  1.28 ~ "Confident Upward")
-  write.csv(results.all, paste0("../Variables/Summary.", ref, ".csv"), row.names = FALSE)
+  write.csv(results.all, paste0("./Variables/Summary.", ref, ".csv"), row.names = FALSE)
 }
 
-if (file.exists(paste0("../Variables/Summary.Variables.", ref, ".csv"))){
-  Summary.v <- read.csv(paste0("../Variables/Summary.Variables.", ref, ".csv"), header = TRUE)
+if (file.exists(paste0("./Variables/Summary.Variables.", ref, ".csv"))){
+  Summary.v <- read.csv(paste0("./Variables/Summary.Variables.", ref, ".csv"), header = TRUE)
 } else {
   Summary.v <- results.all %>% group_by(variable) %>% summarise(Low = sum(CAT2016 == "Low", na.rm=TRUE), 
                                                                Normal = sum(CAT2016 == "Normal", na.rm = TRUE),
                                                                High = sum(CAT2016 == "High", na.rm = TRUE))
-  write.csv(Summary.v, paste0("../Variables/Summary.Variables.", ref, ".csv"), row.names = FALSE)
+  write.csv(Summary.v, paste0("./Variables/Summary.Variables.", ref, ".csv"), row.names = FALSE)
 }
 
 
@@ -156,7 +156,7 @@ for (k in 1:length(stn.list.full)){
   stn <- stn.list.full[k]
   # print(stn)
   # load data
-  data <- read.csv(paste0("../Variables/", stn, ".csv"), header = TRUE)
+  data <- read.csv(paste0("./Variables/", stn, ".csv"), header = TRUE)
   data$station <- as.character(data$station)
   
   # extract variable of interest
@@ -203,7 +203,7 @@ trend.v <- Ind.trends %>% group_by(variable) %>%
   summarise(Sig.pos = sum(Z>=0.84, na.rm=TRUE), 
             None = n() - sum(Z>=0.84, na.rm=TRUE) - sum(Z<=-0.84, na.rm = TRUE),
             Sig.neg = sum(Z<=-0.84, na.rm = TRUE))
-write.csv(trend.v, paste0("../Variables/Summary.Variables.trends_", aggmethod, ".csv"), row.names = FALSE)
+write.csv(trend.v, paste0("./Variables/Summary.Variables.trends_", aggmethod, ".csv"), row.names = FALSE)
 
 # Remove redundant variables to save memory space
 remove(snap,stn,data,q,var.name,var.t,watershed,time,data.ref,q.var,median,goodyears,gap.check,latest, 

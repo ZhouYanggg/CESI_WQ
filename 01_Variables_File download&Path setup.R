@@ -29,5 +29,5 @@ if( length( grep("Hydat", list.files(hy_file)))==0){
   hy_set_default_db(hydat_path = hy_db)
 }
 
-area_file <- "../Dependencies/RHBN_NandU_watershedareas.csv"
+area_file <- "./Dependencies/RHBN_NandU_watershedareas.csv"
 area <- read.table(area_file, sep=',', header=T)
