@@ -69,9 +69,9 @@ aggmethod <- "median"
 WaterBodies<- readOGR(dsn = "./Dependencies", "MainWaterBodiest")
 # load ecozone layer (basemap options)
 CanadaBound <- readOGR(dsn = "./Dependencies", "CanadaBound")
-crs <- basins@proj4string
+crs <- WaterBodies@proj4string
 # Load station points as spatial object, and apply projection information
-stn_data <- as.data.frame(hy_stations() %>% select(STATION_NUMBER, LATITUDE, LONGITUDE))
+stn_data <- as.data.frame(hy_stations() %>% dplyr::select(STATION_NUMBER, LATITUDE, LONGITUDE))
 stn_data <- stn_data[stn_data$STATION_NUMBER %in% stn.list.full,]
 stn_xy   <- stn_data[,c("LONGITUDE", "LATITUDE")]
 crs_wgs  <- CRS( "+init=epsg:4326")
