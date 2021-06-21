@@ -358,7 +358,7 @@ flow_calendar <- function(id, year){
 
 
 #### Obtain flow data and calculate hydrological variables ####
-stations <- read.csv("./Dependencies/RHBN_U.csv", header = TRUE)
+stations <- read.csv("../Dependencies/RHBN_U.csv", header = TRUE)
 list <-as.character(stations$STATION_NUMBER)
 # select station from list, analyze, write to csv.
 for (i in 1:length(list)){

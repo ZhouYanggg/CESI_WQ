@@ -21,11 +21,11 @@ library("dplyr")     # For data tidying and data tables
 library("grDevices")
 
 #### Creating aggregate and map figures #####
-if (dir.exists("./Figures/National_Quantiles")==FALSE){
-  dir.create("./Figures/National_Quantiles")
+if (dir.exists("../Figures/National_Quantiles")==FALSE){
+  dir.create("../Figures/National_Quantiles")
 }
-if (dir.exists("./Figures/National_Trends")==FALSE){
-  dir.create("./Figures/National_Trends")
+if (dir.exists("../Figures/National_Trends")==FALSE){
+  dir.create("../Figures/National_Trends")
 }
 for (i in 1:length(num)){ 
   num2 <- 1 #num[i]
@@ -100,7 +100,7 @@ for (i in 1:length(num)){
     
     
 #### Quantile map for flow magnitude of 2016 vs historic ####
-    png(filename =paste0("./Figures/National_Quantiles/Map_",refyear,"_", var.name2, "_Quantile_RHBN_U.png"),
+    png(filename =paste0("../Figures/National_Quantiles/Map_",refyear,"_", var.name2, "_Quantile_RHBN_U.png"),
         width = 20, height = 18, res=600, units = "cm")
     # plot(basins, col=grey.colors(7, start = 0.9, end=0.9), border="black") # use this line for drainage basin base
     plot(CanadaBound_proj, col=grey.colors(7, start = 0.9, end=0.9), border="black") # use this line for ecozone base
@@ -114,7 +114,7 @@ for (i in 1:length(num)){
   
   
 #### Trend map coloured by trend confidence, shapes for direction of trend ####
-  png(filename =paste0("./Figures/National_Trends/Map_", var.name2, "_Trends1970-",refyear,"_RHBN_U.png"),
+  png(filename =paste0("../Figures/National_Trends/Map_", var.name2, "_Trends1970-",refyear,"_RHBN_U.png"),
       width = 20, height = 18, res=600, units = "cm")
   # plot(basins, col=grey.colors(7, start = 0.9, end=0.9), border="black") # use this line for drainage basin base
   plot(CanadaBound_proj, col=grey.colors(7, start = 0.9, end=0.9), border="black") # use this line for ecozone base
