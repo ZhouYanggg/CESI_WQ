@@ -1,4 +1,4 @@
-# Hurdle trends for pot_days
+# Hurdle trends for pot_max_dur
 # to be incorporated into other code later
 
 library("dplyr")
@@ -10,7 +10,7 @@ library("zyp")
 
 
 # Streamlined -------------------
-var.t <- "pot_days"   # Couldn't replace variable name when using models
+var.t <- "pot_max_dur"   # Couldn't replace variable name when using models
 
 stations <- read.csv("../Dependencies/RHBN_U.csv", header = TRUE)
 list <-as.character(stations$STATION_NUMBER)
@@ -45,7 +45,7 @@ for (i in 1: length(list)){
       if(sum(data.p[[var.t]]==0)>=3){
         
         # Is hurdle necessary?
-        model2 <- tryCatch(hurdle(pot_days~year, data.p, dist="negbin", zero.dist = "negbin"),
+        model2 <- tryCatch(hurdle(pot_max_dur~year, data.p, dist="negbin", zero.dist = "negbin"),
                            error=function(e){return("A")}, warning=function(w){return("B")})
         hurdle<- FALSE #default to False
         if(!is.character(model2)){
@@ -58,14 +58,14 @@ for (i in 1: length(list)){
           
           # Are we confident there is a trend?
           # Count portion of hurdle
-          data.c <- data.p[data.p$pot_days>0,]
-          model.count <- MASS::glm.nb(pot_days~year, data.c)
+          data.c <- data.p[data.p$pot_max_dur>0,]
+          model.count <- MASS::glm.nb(pot_max_dur~year, data.c)
           low.c<- exp(confint(model.count, level=0.9))[2,1]
           hi.c <- exp(confint(model.count, level=0.9))[2,2]
           
           # Zero portion of hurdle
-          data.p$pot_days.z <- !I(data.p$pot_days==0)
-          model.zero <- glm(pot_days.z~year, data.p, family = "binomial")
+          data.p$pot_max_dur.z <- !I(data.p$pot_max_dur==0)
+          model.zero <- glm(pot_max_dur.z~year, data.p, family = "binomial")
           low.z<-exp(confint(model.zero, level=0.9))[2,1]
           hi.z<-exp(confint(model.zero, level=0.9))[2,2]
           
@@ -80,15 +80,15 @@ for (i in 1: length(list)){
           }
           
           # Get slope from hurdle
-          model <- hurdle(pot_days~year, data.p, dist="negbin", zero.dist = "binomial", link = "logit")
+          model <- hurdle(pot_max_dur~year, data.p, dist="negbin", zero.dist = "binomial", link = "logit")
           fitted <- unname(model$fitted.values)
           slope <- round((fitted[length(fitted)] - fitted[1])/
                            (max(data.p$year) - min(data.p$year)),2)
-          years.for.trend <- sum(!is.na(data.p$pot_days))
+          years.for.trend <- sum(!is.na(data.p$pot_max_dur))
           test <- "hurdle"
           
           } else {
-            model <- glm.nb(pot_days~year, data.p)
+            model <- glm.nb(pot_max_dur~year, data.p)
             low<-exp(confint(model, level=0.9))[2,1]
             hi<-exp(confint(model, level=0.9))[2,2]
             # confidence test @ 70% and 90% confidence
@@ -102,11 +102,11 @@ for (i in 1: length(list)){
             fitted <- unname(model$fitted.values)
             slope <- round((fitted[length(fitted)] - fitted[1])/
                              (max(data.p$year) - min(data.p$year)),2)
-            years.for.trend <- sum(!is.na(data.p$pot_days))
+            years.for.trend <- sum(!is.na(data.p$pot_max_dur))
             test <- "glm.nb"
           }
         } else {
-          model <- glm.nb(pot_days~year, data.p)
+          model <- glm.nb(pot_max_dur~year, data.p)
           low<-exp(confint(model, level=0.9))[2,1]
           hi<-exp(confint(model, level=0.9))[2,2]
           # confidence test @ 70% and 90% confidence
@@ -120,7 +120,7 @@ for (i in 1: length(list)){
           fitted <- unname(model$fitted.values)
           slope <- round((fitted[length(fitted)] - fitted[1])/
                            (max(data.p$year) - min(data.p$year)),2)
-          years.for.trend <- sum(!is.na(data.p$pot_days))
+          years.for.trend <- sum(!is.na(data.p$pot_max_dur))
           test <- "glm.nb"
           # # use Mann-Kendall
           #  x <- data.p[[var.t]]
@@ -129,7 +129,7 @@ for (i in 1: length(list)){
           #  corr<- cor.test(y, x, method = "kendall", alternative = "two.sided", exact = FALSE)
           #  Z <-abs(corr$statistic[["z"]])
           #  slope <- round(sen$coefficients[[2]],2)
-          #  years.for.trend <- sum(!is.na(data.p$pot_days))
+          #  years.for.trend <- sum(!is.na(data.p$pot_max_dur))
           #  CATTrend <- case_when(Z>=1.28 ~ "Confident",
           #                        Z>=0.52 & Z<1.28 ~ "Likely",
           #                        Z<0.52 ~ "Uncertain")
@@ -146,7 +146,7 @@ for (i in 1: length(list)){
 }
 
 snap.all <- bind_rows(snap)
-pot_days_output <- snap.all
-write.csv(snap.all, "../Variables/Summary_pot_days_trends.csv", row.names = FALSE)
+pot_max_dur_output <- snap.all
+write.csv(snap.all, "../Variables/Summary_pot_max_dur_trends.csv", row.names = FALSE)
 
 
