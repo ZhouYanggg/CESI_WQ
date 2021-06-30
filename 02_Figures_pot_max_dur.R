@@ -4,7 +4,7 @@
 library("dplyr")
 #library("pscl")
 library("MASS")
-install.packages("countreg", repos="http://R-Forge.R-project.org") # might be a better way to do this; there's no point in reinstalling every time...
+# install.packages("countreg", repos="http://R-Forge.R-project.org") # might be a better way to do this; there's no point in reinstalling every time...
 library("countreg")
 library("zyp")
 
@@ -12,7 +12,7 @@ library("zyp")
 # Streamlined -------------------
 var.t <- "pot_max_dur"   # Couldn't replace variable name when using models
 
-stations <- read.csv("../Dependencies/RHBN_U.csv", header = TRUE)
+stations <- read.csv("../Dependencies/RHBN_U.csv", header = TRUE) %>% filter(Use_for_CESI == 1)
 list <-as.character(stations$STATION_NUMBER)
 
 snap <- list()

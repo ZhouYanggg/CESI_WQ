@@ -4,7 +4,7 @@
 library("dplyr")
 #library("pscl")
 library("MASS")
-install.packages("countreg", repos="http://R-Forge.R-project.org") # might be a better way to do this; there's no point in reinstalling every time...
+# install.packages("countreg", repos="http://R-Forge.R-project.org") # might be a better way to do this; there's no point in reinstalling every time...
 library("countreg")
 library("zyp")
 
@@ -12,7 +12,7 @@ library("zyp")
 # Streamlined -------------------
 var.t <- "pot_days"   # Couldn't replace variable name when using models
 
-stations <- read.csv("../Dependencies/RHBN_U.csv", header = TRUE)
+stations <- read.csv("../Dependencies/RHBN_U.csv", header = TRUE) %>% filter(Use_for_CESI == 1)
 list <-as.character(stations$STATION_NUMBER)
 
 snap <- list()
@@ -147,6 +147,6 @@ for (i in 1: length(list)){
 
 snap.all <- bind_rows(snap)
 pot_days_output <- snap.all
-write.csv(snap.all, "../Variables/Summary_pot_days_trends.csv", row.names = FALSE)
+# write.csv(snap.all, "../Variables/Summary_pot_days_trends.csv", row.names = FALSE)
 
 
