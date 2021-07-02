@@ -1,3 +1,13 @@
+"""
+Matt Noteboom 2 Jul 2021:
+Currently does not stand alone from QGIS. Can run within QGIS from Line 11 onwards,
+but so far have been unable to successfully import the QGIS module outside the QGIS console.
+
+import sys
+sys.path.append("C://Program Files (x86)//QGIS 3.16//apps//qgis-ltr//python")
+import qgis.core
+"""
+
 from qgis import processing
 import os
 

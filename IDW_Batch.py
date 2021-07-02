@@ -1,4 +1,15 @@
+"""
+Matt Noteboom 2 Jul 2021:
+Currently does not stand alone from QGIS. Can run within QGIS from Line 11 onwards,
+but so far have been unable to successfully import the QGIS module outside the QGIS console.
+
+import sys
+sys.path.append("C://Program Files (x86)//QGIS 3.16//apps//qgis-ltr//python")
+import qgis.core
+"""
+
 from qgis import processing
+
 
 metrics = ["ann_mean_yield","pot_days","pot_events","pot_max_dur", "pot_mean_dur",
            "X1_day_max", "dr_days","dut_max_dur","X7_day_min"]
