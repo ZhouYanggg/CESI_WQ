@@ -8,14 +8,16 @@
     # Are we confident there is a trend?
     # Count portion of hurdle
     data.c <- data.p[data.p[[v]]>0,]
-    model.count <- MASS::glm.nb(data.c[[v]]~data.c$year)
-    low.c<- exp(confint(model.count, level=0.9))[2,1]
-    hi.c <- exp(confint(model.count, level=0.9))[2,2]
+    model.count <- tryCatch(MASS::glm.nb(data.c[[v]]~data.c$year),
+                            error=function(e){return("A")})
+    low.c<- ifelse(is.character(model.count), NA, exp(confint(model.count, level=0.9))[2,1])
+    hi.c <- ifelse(is.character(model.count), NA, exp(confint(model.count, level=0.9))[2,2])
     # Zero portion of hurdle
     data.p$z <- !I(data.p[[v]]==0)
-    model.zero <- glm(z~year, data.p, family = "binomial")
-    low.z<-exp(confint(model.zero, level=0.9))[2,1]
-    hi.z<-exp(confint(model.zero, level=0.9))[2,2]
+    model.zero <- tryCatch(glm(z~year, data.p, family = "binomial"),
+                           error=function(e){return("A")})
+    low.z<-ifelse(is.character(model.zero), NA, exp(confint(model.zero, level=0.9))[2,1])
+    hi.z<-ifelse(is.character(model.zero), NA, exp(confint(model.zero, level=0.9))[2,2])
     
     if(!is.na(low.c)&!is.na(hi.c)&!is.na(low.z)&!is.na(hi.z)){
     # combined confidence test @ 70% and 90% confidence

@@ -4,9 +4,10 @@
 # on negative binomial Test.
 ###################################################################################################
 negbin <- function(v){
-  model <<- glm.nb(data.p[[v]]~data.p$year)
-  low<-exp(confint(model, level=0.9))[2,1]
-  hi<-exp(confint(model, level=0.9))[2,2]
+  model <- tryCatch(glm.nb(data.p[[v]]~data.p$year),
+                     error=function(e){return("A")})
+  low<-ifelse(is.character(model), NA, exp(confint(model, level=0.9))[2,1])
+  hi<-ifelse(is.character(model), NA, exp(confint(model, level=0.9))[2,2])
   if (!is.na(low)&!is.na(hi)){
     # confidence test @ 70% and 90% confidence
     pass <<- ifelse(all(low<=1, hi>=1), "Maybe?", "Confident")

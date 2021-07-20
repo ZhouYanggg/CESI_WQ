@@ -20,9 +20,10 @@ list <-as.character(stations$STATION_NUMBER)
 ### Prompt to get the metric name
 var_list = c("ann_mean_yield",
   "pot_days", "pot_events",  "pot_max_dur",
-  "1_day_max", "dr_days", "dr_events", "dut_max_dur",
-  "7_day_min") 
-#var_list = c("dr_days")
+  "X1_day_max", "dr_days", "dr_events", "dut_max_dur",
+  "X7_day_min")
+result_list = paste0(var_list, "_trend")
+#var_list = c("X7_day_min")
 # Use this when testing single variable
 #var.t = 
 snap <- list()
@@ -38,8 +39,8 @@ library("countreg")
 library("zyp")
 ###############################################
 
-for (j in var_list){
-  var.t = j
+for (j in 1:length(var_list)){
+  var.t = var_list[j]
   print(var.t)
   output_name = paste0("./Summary_", var.t, "_trends.csv")
   for (i in 1: length(list)){
@@ -67,7 +68,7 @@ for (j in var_list){
               (max(gap.check) <= 11))){
         
         # Are there any zero values?
-        if((sum(data.p[[var.t]]==0)<3)&(var.t %in% c("1_day_max", "ann_mean_yield", "7_day_min"))){
+        if((sum(data.p[[var.t]]==0)<3)&(var.t %in% c("X1_day_max", "ann_mean_yield", "X7_day_min"))){
           mk_test(var.t)
           }else{
             # Is hurdle necessary?
@@ -97,7 +98,11 @@ for (j in var_list){
                             CATTrend=CATTrend, test=test)
   }
   snap.all <- bind_rows(snap)
-  write.csv(snap.all, output_name, row.names = FALSE)
+  #if (file.exists(output1)){
+  #  file.remove(output1) 
+  #}
+  #write.csv(snap.all, output_name, row.names = FALSE)
+  assign(result_list[j], snap.all)
   snap <-list()
 }
 
